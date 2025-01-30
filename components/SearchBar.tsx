@@ -1,21 +1,29 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 interface SearchBarProps {
-  onSearch: (id: string) => void
+  onSearch: (id: string) => void,
+  initSearchValue: string,
 }
 
-export function SearchBar({ onSearch }: SearchBarProps) {
-  const [searchValue, setSearchValue] = useState("")
+export function SearchBar({ onSearch, initSearchValue }: SearchBarProps) {
+  const [searchValue, setSearchValue] = useState(initSearchValue)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     onSearch(searchValue)
   }
 
+  useEffect(() => {
+    setSearchValue(initSearchValue);
+  }, [initSearchValue]);
+
+  console.log("initSearchValue", initSearchValue)
+  console.log("searchValue", searchValue)
+
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
+    <form onSubmit={handleSubmit} className={`flex gap-2 ${searchValue === "" ? "border border-red-500" : ""}`}>
       <Input
         type="number"
         placeholder="Enter Operator ID"
