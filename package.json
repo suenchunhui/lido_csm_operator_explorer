@@ -1,7 +1,9 @@
 {
-  "name": "dev_detailed_operator",
+  "name": "lido_csm_detailed_explorer",
   "version": "0.1.0",
   "private": true,
+  "author": "Suen Chun Hui",
+  "license": "GPL3",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

@@ -133,9 +133,9 @@ export default function Dashboard() {
         return;
         }
 
-        //@ts-ignore
+        //@ts-expect-error
         if (typeof window.ethereum !== 'undefined') {
-            //@ts-ignore
+            //@ts-expect-error
             const provider = new ethers.BrowserProvider(window.ethereum);
             const contract = new ethers.Contract(lido_csm_mainnet_addr, lido_csm_getNodeOperator_abi, provider);
 
