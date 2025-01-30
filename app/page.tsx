@@ -166,12 +166,14 @@ export default function Dashboard() {
                     extendedManagerPermissions: result.extendedManagerPermissions
                 });
                 setOperatorId(id);
+                setSearchId(id);
                 const newUrl = new URL(window.location.href);
                 newUrl.searchParams.set('operatorId', id);
                 window.history.pushState({}, '', newUrl.toString());
                 succ = true;
                 break;
             } catch (error) {
+                console.log("Fetch error", error);
                 continue;
             }
         }
