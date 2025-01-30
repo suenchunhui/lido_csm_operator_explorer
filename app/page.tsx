@@ -126,20 +126,27 @@ export default function Dashboard() {
 
   
   const handleSearch = (id: string) => {
-
     const fetchOperatorData = async (id: string) => {
         if(parseInt(id) <= 0){
         toast({title: "Invalid operator id", description: "Use a positive integer"});
         return;
         }
 
-        //@ts-expect-error eth-error
-        if (typeof window.ethereum !== 'undefined') {
-            //@ts-expect-error eth-error
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            const contract = new ethers.Contract(lido_csm_mainnet_addr, lido_csm_getNodeOperator_abi, provider);
-
+        const rpcUrls = [
+          "https://cloudflare-eth.com",
+          "https://rpc.flashbots.net",
+          "https://eth.llamarpc.com",
+          "https://1rpc.io/eth",
+          "https://rpc.mevblocker.io",
+          "https://ethereum-rpc.publicnode.com",
+        ];
+        const randomRpcUrl = rpcUrls[Math.floor(Math.random() * rpcUrls.length)];
+        let succ = false;
+        for(let retry=0;retry<3;retry++){
             try {
+                const provider = new ethers.JsonRpcProvider(randomRpcUrl);
+                const contract = new ethers.Contract(lido_csm_mainnet_addr, lido_csm_getNodeOperator_abi, provider);
+
                 const result = await contract.getNodeOperator(id);
                 setCurrentOperator({
                     totalAddedKeys: result.totalAddedKeys,
@@ -162,20 +169,17 @@ export default function Dashboard() {
                 const newUrl = new URL(window.location.href);
                 newUrl.searchParams.set('operatorId', id);
                 window.history.pushState({}, '', newUrl.toString());
+                succ = true;
+                break;
             } catch (error) {
-                console.error("Error fetching operator data:", error);
+                continue;
             }
-        } else {
-            console.error("Ethereum provider not found");
+        }
+        if(!succ){
+            toast({title: "Error fetching operator data"});
         }
     };
-
-
     fetchOperatorData(id);
-    setSearchId(id)
-    // In a real application, you would fetch data based on the ID here
-    // For this example, we're just using the same mock data
-    setCurrentOperator(operatorData)
   }
 
   return (
